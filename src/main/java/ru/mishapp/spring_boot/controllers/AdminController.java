@@ -16,7 +16,6 @@ import java.util.List;
 public class AdminController {
 
     private final UserService userService;
-
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -29,23 +28,11 @@ public class AdminController {
     public String adminPage(Model model) {
         List<User> list = userService.getAllUsers();
         model.addAttribute("users", list);
+        model.addAttribute("user", new User());
+        model.addAttribute("all_roles", userService.getAllRoles());
         return "admin";
     }
 
-    @GetMapping("/{id}")
-    public String changeUserPage(@PathVariable("id") long id, Model model) {
-        model.addAttribute("user", userService.getUser(id));
-        model.addAttribute("roles", userService.getAllRoles());
-        model.addAttribute("action", "Изменить");
-        return "change";
-    }
-
-    @GetMapping("/new")
-    public String addUserPage(@ModelAttribute("user") User user, Model model) {
-        model.addAttribute("roles", userService.getAllRoles());
-        model.addAttribute("action", "Добавить");
-        return "change";
-    }
 
     @PostMapping("/del")
     public String delUser(@RequestParam("user_id") long id) {
@@ -60,7 +47,12 @@ public class AdminController {
         for (Long id : roleIds) {
             user.addRole(userService.getRole(id));
         }
-        user.setPassword(passwordEncoder.encode(password));
+
+        String bCryptPassword = password.isEmpty() ?
+                userService.getUser(user.getId()).getPassword() :
+                passwordEncoder.encode(password);
+
+        user.setPassword(bCryptPassword);
         userService.saveUser(user);
         return "redirect:/admin";
     }

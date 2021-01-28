@@ -26,8 +26,8 @@ public class User implements UserDetails {
     @Column(name = "age")
     private int age;
 
-    @Column(name = "login", unique = true)
-    private String username;
+    @Column(name = "email", unique = true)
+    private String email;
 
     @Column(name = "password")
     private String password;
@@ -79,8 +79,8 @@ public class User implements UserDetails {
         this.age = age;
     }
 
-    public void setUsername(String login) {
-        this.username = login;
+    public void setUsername(String email) {
+        this.email = email;
     }
 
     public void setPassword(String password) {
@@ -98,7 +98,7 @@ public class User implements UserDetails {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
-                ", username='" + username + '\'' +
+                ", username='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", authorities=" + roles +
                 '}';
@@ -114,9 +114,8 @@ public class User implements UserDetails {
         return password;
     }
 
-    @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override
