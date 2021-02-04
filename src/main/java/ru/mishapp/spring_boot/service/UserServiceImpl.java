@@ -1,6 +1,7 @@
 package ru.mishapp.spring_boot.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.mishapp.spring_boot.dao.RoleDao;
 import ru.mishapp.spring_boot.dao.UserDao;
@@ -15,18 +16,24 @@ public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
     private final RoleDao roleDao;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, RoleDao roleDao) {
+    public UserServiceImpl(UserDao userDao, RoleDao roleDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
         this.roleDao = roleDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
     @Transactional
     @Override
-    public void saveUser(User user) {
-        userDao.saveUser(user);
+    public User saveUser(User user) {
+        String bCryptPassword = user.getPassword() == null ?
+                getUser(user.getId()).getPassword() :
+                passwordEncoder.encode(user.getPassword());
+        user.setPassword(bCryptPassword);
+        return userDao.saveUser(user);
     }
 
     @Transactional
@@ -50,10 +57,6 @@ public class UserServiceImpl implements UserService {
         return userDao.getUserByLogin(login);
     }
 
-    @Override
-    public Role getRole(long id) {
-        return roleDao.getRole(id);
-    }
 
     @Override
     public List<Role> getAllRoles() {

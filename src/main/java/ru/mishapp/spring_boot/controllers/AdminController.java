@@ -16,19 +16,14 @@ import java.util.List;
 public class AdminController {
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AdminController(UserService userService, PasswordEncoder passwordEncoder) {
+    public AdminController(UserService userService) {
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping
     public String adminPage(Model model) {
-        List<User> list = userService.getAllUsers();
-        model.addAttribute("users", list);
-        model.addAttribute("user", new User());
         model.addAttribute("all_roles", userService.getAllRoles());
         return "admin";
     }
@@ -40,20 +35,4 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @PostMapping
-    public String saveUser(@ModelAttribute("user") User user,
-                           @RequestParam("role_select") Long[] roleIds,
-                           @RequestParam("password") String password) {
-        for (Long id : roleIds) {
-            user.addRole(userService.getRole(id));
-        }
-
-        String bCryptPassword = password.isEmpty() ?
-                userService.getUser(user.getId()).getPassword() :
-                passwordEncoder.encode(password);
-
-        user.setPassword(bCryptPassword);
-        userService.saveUser(user);
-        return "redirect:/admin";
-    }
 }

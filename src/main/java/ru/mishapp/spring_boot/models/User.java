@@ -1,6 +1,7 @@
 package ru.mishapp.spring_boot.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -91,6 +92,10 @@ public class User implements UserDetails {
         this.roles = authorities;
     }
 
+    public void setAuthorities(Set<Role> authorities) {
+        this.roles = authorities;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -118,21 +123,25 @@ public class User implements UserDetails {
         return email;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;

@@ -19,27 +19,26 @@
                 <div class="container-fluid">
                     <div class="row justify-content-center">
                         <div class="col-6">
-                            <form id="edit_form" action="/admin" method="POST" th:object="${user}">
-                                <input type="hidden" id="user_id_hidden"th:field="*{id}">
+                            <form id="edit_form" action="/admin" method="POST">
                                 <div class="mb-3">
                                     <label for="user_id"><b>ID</b></label>
                                     <input id="user_id" class="form-control" type="text" disabled>
                                 </div>
                                 <div class="mb-3">
                                     <label for="name"><b>First Name</b></label>
-                                    <input id="name" class="form-control" type="text" th:field="*{firstName}">
+                                    <input id="name" class="form-control" type="text">
                                 </div>
                                 <div class="mb-3">
                                     <label for="last_name"><b>Last Name</b></label>
-                                    <input id="last_name" class="form-control" type="text" th:field="*{lastName}">
+                                    <input id="last_name" class="form-control" type="text">
                                 </div>
                                 <div class="mb-3">
                                     <label for="age"><b>Age</b></label>
-                                    <input id="age" class="form-control" type="text" th:field="*{age}">
+                                    <input id="age" class="form-control" type="text">
                                 </div>
                                 <div class="mb-3">
                                     <label for="login"><b>Email</b></label>
-                                    <input id="login" class="form-control" type="text" th:field="*{username}">
+                                    <input id="login" class="form-control" type="text">
                                 </div>
                                 <div class="mb-3">
                                     <label for="password"><b>Password</b></label>
@@ -60,7 +59,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="edit_form" class="btn btn-primary">Edit</button>
+                <button type="submit" id="edit_button" class="btn btn-primary">Edit</button>
             </div>
         </div>
     </div>
