@@ -1,5 +1,8 @@
+window.onload = updateAllUserTable;
+
 const modalEdit = document.getElementById('modal_edit');
 const modalDelete = document.getElementById('modal_delete');
+const addNewUserForm = document.getElementById('add_new_user_form')
 const addNewUserButton = document.getElementById("add_new_user_button");
 const buttonEdit = modalEdit.querySelector('#edit_button');
 const buttonDelete = modalDelete.querySelector('#delete_button');
@@ -8,10 +11,12 @@ const buttonDelete = modalDelete.querySelector('#delete_button');
 modalEdit.addEventListener('show.bs.modal', setModalData);
 modalDelete.addEventListener('show.bs.modal', setModalData);
 
+
 addNewUserButton.onclick = function () {
-    saveUser(document.getElementById('add_new_user_form')).then(
+    saveUser(addNewUserForm).then(
         function (result){
             if (result) {
+                clearForm(addNewUserForm)
                 updateAllUserTable();
             }else{
                 alert("Что-то пошло не так")
@@ -46,7 +51,7 @@ buttonDelete.onclick = function () {
 }
 
 function setModalData(event) {
-    clearModalData(this);
+    clearForm(this);
     const button = event.relatedTarget;
     fetch("admin/api/users/" + button.getAttribute("data-bs-id"))
         .then(response => response.json())
@@ -65,14 +70,14 @@ function setModalData(event) {
         });
 }
 
-function clearModalData(modal) {
-    modal.querySelector('#user_id').value = "";
-    modal.querySelector('#name').value = "";
-    modal.querySelector('#last_name').value = "";
-    modal.querySelector('#age').value = "";
-    modal.querySelector('#login').value = "";
-    modal.querySelector('#password').value = "";
-    const options = modal.querySelector('#role_select').options;
+function clearForm(form) {
+    form.querySelector('#user_id').value = "";
+    form.querySelector('#name').value = "";
+    form.querySelector('#last_name').value = "";
+    form.querySelector('#age').value = "";
+    form.querySelector('#login').value = "";
+    form.querySelector('#password').value = "";
+    const options = form.querySelector('#role_select').options;
     for (let i = 0; i < options.length; i++) {
         options[i].selected = false;
     }
@@ -121,3 +126,4 @@ async function deleteUser(form) {
     });
     return response.ok;
 }
+

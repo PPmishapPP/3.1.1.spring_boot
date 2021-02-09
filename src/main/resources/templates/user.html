@@ -13,6 +13,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js"
             integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj"
             crossorigin="anonymous"></script>
+    <script defer src="/js/table_functions.js"></script>
+    <script defer src="/js/user_script.js"></script>
 
 </head>
 <body>
@@ -46,19 +48,7 @@
                     <th>Role</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr class="border-top" th:object="${user}">
-                    <td th:text="*{getId()}"></td>
-                    <td th:text="*{getFirstName()}"></td>
-                    <td th:text="*{getLastName()}"></td>
-                    <td th:text="*{getAge()}"></td>
-                    <td th:text="*{getUsername()}"></td>
-                    <td>
-                        <div th:each="role : *{getAuthorities()}">
-                            <span th:utext="${role.getAuthority()}"></span>
-                        </div>
-                    </td>
-                </tr>
+                <tbody id="user_tbody">
                 </tbody>
             </table>
             </div>

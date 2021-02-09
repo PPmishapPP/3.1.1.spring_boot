@@ -47,7 +47,7 @@ public class UserDaoImp implements UserDao {
         query.setParameter("login", login);
         List<User> list = query.getResultList();
         if (list.isEmpty()) {
-            throw new UsernameNotFoundException("User " + login + "not found");
+            return null;
         }
         return list.get(0);
     }

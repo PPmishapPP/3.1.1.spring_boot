@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User saveUser(User user) {
-        String bCryptPassword = user.getPassword() == null ?
+        String bCryptPassword = user.getPassword().isEmpty() ?
                 getUser(user.getId()).getPassword() :
                 passwordEncoder.encode(user.getPassword());
         user.setPassword(bCryptPassword);

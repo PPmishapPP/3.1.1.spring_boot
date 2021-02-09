@@ -1,6 +1,3 @@
-window.onload = updateAllUserTable;
-
-
 function updateAllUserTable() {
     fetch('admin/api/users')
         .then(response => response.json())
@@ -8,12 +5,12 @@ function updateAllUserTable() {
             const tbody = document.getElementById('all_users_tbody');
             tbody.innerHTML = '';
             for(let i = 0; i < users.length; i++){
-                tbody.appendChild(getUserRow(users[i]));
+                tbody.appendChild(getUserRow(users[i], true));
             }
         });
 }
 
-function getUserRow(user) {
+function getUserRow(user, isAdminPage) {
     let row = document.createElement("tr");
     let rowHTML = getUserTD(user.id);
     rowHTML += getUserTD(user.firstName);
@@ -25,10 +22,13 @@ function getUserRow(user) {
         authorities += user.authorities[i].authority + " ";
     }
     rowHTML += getUserTD(authorities);
-    rowHTML += getUserTD("<button type='button' class='btn btn-info text-white' data-bs-toggle='modal' " +
-        "data-bs-target='#modal_edit' data-bs-id='"+ user.id+"'>Edit</button>");
-    rowHTML += getUserTD("<button type='button' class='btn btn-danger' data-bs-toggle='modal' "+
-        "data-bs-target='#modal_delete' data-bs-id='"+ user.id+"'>Delete</button>")
+
+    if (isAdminPage){
+        rowHTML += getUserTD("<button type='button' class='btn btn-info text-white' data-bs-toggle='modal' " +
+            "data-bs-target='#modal_edit' data-bs-id='"+ user.id+"'>Edit</button>");
+        rowHTML += getUserTD("<button type='button' class='btn btn-danger' data-bs-toggle='modal' "+
+            "data-bs-target='#modal_delete' data-bs-id='"+ user.id+"'>Delete</button>")
+    }
 
     row.innerHTML = rowHTML;
     return row;
