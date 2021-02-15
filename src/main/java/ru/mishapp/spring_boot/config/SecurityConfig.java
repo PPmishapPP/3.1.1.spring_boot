@@ -1,9 +1,13 @@
 package ru.mishapp.spring_boot.config;
 
+import com.github.scribejava.apis.GoogleApi20;
+import com.github.scribejava.core.builder.ServiceBuilder;
+import com.github.scribejava.core.oauth.OAuth20Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,9 +16,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ru.mishapp.spring_boot.config.handler.LoginSuccessHandler;
 
@@ -53,16 +54,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests()
+                .antMatchers("/oauth2/**").permitAll()
                 .antMatchers("/login").anonymous()
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .antMatchers("/user/**").hasAnyAuthority("ADMIN", "USER", "ROLE_USER")
                 .anyRequest()
-                .authenticated()
-                .and()
-                .oauth2Login()
-                .loginPage("/login")
-                .successHandler(new LoginSuccessHandler());
+                .authenticated();
 
     }
 
@@ -79,4 +77,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return daoAuthenticationProvider;
     }
 
+    @Bean
+    public OAuth20Service oAuth20Service(@Autowired Environment env) {
+        return new ServiceBuilder(env.getProperty("oauth2.google.client-id"))
+                .apiSecret(env.getProperty("oauth2.google.client-secret"))
+                .defaultScope(env.getProperty("oauth2.google.scope"))
+                .callback(env.getProperty("oauth2.google.callback"))
+                .build(GoogleApi20.instance());
+    }
 }

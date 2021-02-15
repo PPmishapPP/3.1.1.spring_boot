@@ -1,6 +1,5 @@
 package ru.mishapp.spring_boot.dao;
 
-
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 import ru.mishapp.spring_boot.models.User;
